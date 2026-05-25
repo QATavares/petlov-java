@@ -4,6 +4,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.time.Duration;
 
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -16,12 +18,22 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 
 class Cadastro {
 
+	WebDriver driver;
+
+	@BeforeEach
+	void start () {
+		driver = new ChromeDriver(); 
+		driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(2));
+	}
+
+	@AfterEach
+	void finish () {
+		driver.close(); 
+	}
+
 	@Test
 	@DisplayName("Deve cadastrar um ponto de doação")
 	void createPoint() {
-		WebDriver driver = new ChromeDriver(); 
-		driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(2));
-
 		driver.get("https://petlov.vercel.app/signup");
 
 		WebElement title = driver.findElement(By.cssSelector("h1"));
@@ -61,6 +73,5 @@ class Cadastro {
 
 		assertEquals(target, result.getText(), "Confirmando o ponto de doação");
 		
-		driver.close(); 
 	}
 }
