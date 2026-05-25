@@ -48,6 +48,19 @@ class Cadastro {
 		WebElement addressDetails = driver.findElement(By.cssSelector("input[name=addressDetails]"));
 		addressDetails.sendKeys("Complemento teste");
 		
+		driver.findElement(By.xpath("//span[text()=\"Cachorros\"]/..")).click();
+
+		driver.findElement(By.className("button-register")).click();
+
+		WebElement result = driver.findElement(By.cssSelector("main p"));
+
+		Wait<WebDriver> waitResult = new WebDriverWait(driver, Duration.ofSeconds(2));
+		waitResult.until(d -> result.isDisplayed());
+
+		String target = "Seu ponto de doação foi adicionado com sucesso. Juntos, podemos criar um mundo onde todos os animais recebam o amor e cuidado que merecem.";
+
+		assertEquals(target, result.getText(), "Confirmando o ponto de doação");
+		
 		driver.close(); 
 	}
 }
