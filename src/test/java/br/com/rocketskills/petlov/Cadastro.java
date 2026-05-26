@@ -29,6 +29,19 @@ class PontoDoacao {
 }
 class Cadastro {
 
+	private void submitForm(PontoDoacao ponto) {
+		
+		$("input[placeholder='Nome do ponto de doação']").setValue(ponto.nome);
+		$("input[name=email]").setValue(ponto.email);
+		$("input[name=cep]").setValue(ponto.cep);
+		$("input[type=button]").click();
+		$("input[name=addressNumber").setValue(ponto.numero.toString());
+		$("input[name=addressDetails]").setValue(ponto.complemento);
+		$(By.xpath("//span[text()=\"" + ponto.pets + "\"]/..")).click();
+		$(".button-register").click();
+	
+	}
+
 	@Test
 	@DisplayName("Deve cadastrar um ponto de doação")
 	void createPoint() {
@@ -44,16 +57,9 @@ class Cadastro {
 
 		open("https://petlov.vercel.app/signup");
 		$("h1").shouldHave(text("Cadastro de ponto de doação"));
+		
+		submitForm(ponto);
 
-		$("input[placeholder='Nome do ponto de doação']").setValue(ponto.nome);
-		$("input[name=email]").setValue(ponto.email);
-		$("input[name=cep]").setValue(ponto.cep);
-		$("input[type=button]").click();
-		$("input[name=addressNumber").setValue(ponto.numero.toString());
-		$("input[name=addressDetails]").setValue(ponto.complemento);
-		$(By.xpath("//span[text()=\"" + ponto.pets + "\"]/..")).click();
-		$(".button-register").click();
-	
 		String target = "Seu ponto de doação foi adicionado com sucesso. Juntos, podemos criar um mundo onde todos os animais recebam o amor e cuidado que merecem.";
 		$("main p").shouldHave(text(target));
 
