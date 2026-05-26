@@ -29,6 +29,11 @@ class PontoDoacao {
 }
 class Cadastro {
 
+	private void accessPage () {
+		open("https://petlov.vercel.app/signup");
+		$("h1").shouldHave(text("Cadastro de ponto de doação"));
+	}
+
 	private void submitForm(PontoDoacao ponto) {
 		
 		$("input[placeholder='Nome do ponto de doação']").setValue(ponto.nome);
@@ -42,26 +47,94 @@ class Cadastro {
 	
 	}
 
+	private void submitFormTwoPets() {
+		$("input[placeholder='Nome do ponto de doação']").setValue("teste");
+		$("input[name=email]").setValue("teste@teste.com");
+		$("input[name=cep]").setValue("71655520");
+		$("input[type=button]").click();
+		$("input[name=addressNumber").setValue("888");
+		$("input[name=addressDetails]").setValue("teste");
+		$(By.xpath("//span[text()=\"Cachorros\"]/..")).click();
+		$(By.xpath("//span[text()=\"Gatos\"]/..")).click();
+
+		$(".button-register").click();
+	}
+
 	@Test
-	@DisplayName("Deve cadastrar um ponto de doação")
-	void createPoint() {
+	@DisplayName("Deve cadastrar um ponto de doação para cachorros com sucesso")
+	void createPointDog() {
+
+		PontoDoacao ponto = new PontoDoacao(
+			"Adoção de AUmigos",
+			"atendimento@aumigos.com.br",
+			"71655520",
+			888,
+			"Complemento teste",
+			"Cachorros"
+		);
+		accessPage();
+	
+		submitForm(ponto);
+
+		String target = "Seu ponto de doação foi adicionado com sucesso. Juntos, podemos criar um mundo onde todos os animais recebam o amor e cuidado que merecem.";
+		$("main p").shouldHave(text(target));
+
+	}
+
+	@Test
+	@DisplayName("Deve cadastrar um ponto de doação para gatos com sucesso")
+	void createPointCat() {
+
+		PontoDoacao ponto = new PontoDoacao(
+			"Lar dos Miaus",
+			"atendimento@miaus.com.br",
+			"71655520",
+			888,
+			"Complemento teste",
+			"Gatos"
+		);
+
+		accessPage();
+		
+		submitForm(ponto);
+
+		String target = "Seu ponto de doação foi adicionado com sucesso. Juntos, podemos criar um mundo onde todos os animais recebam o amor e cuidado que merecem.";
+		$("main p").shouldHave(text(target));
+
+	}
+
+	@Test
+	@DisplayName("Deve cadastrar um ponto de doação para gatos com sucesso")
+	void createPointDuo() {
+
+		accessPage();
+
+		submitFormTwoPets();
+
+		String target = "Seu ponto de doação foi adicionado com sucesso. Juntos, podemos criar um mundo onde todos os animais recebam o amor e cuidado que merecem.";
+		$("main p").shouldHave(text(target));
+
+	}
+	
+	@Test
+	@DisplayName("Não deve cadastrar um ponto de doação")
+	void createPointError() {
 
 		PontoDoacao ponto = new PontoDoacao(
 			"Estação Pet",
-			"estacao@pet.com.br",
+			"estacao&pet.com.br",
 			"71655520",
 			888,
 			"Complemento teste",
 			"Cachorros"
 		);
 
-		open("https://petlov.vercel.app/signup");
-		$("h1").shouldHave(text("Cadastro de ponto de doação"));
+		accessPage();
 		
 		submitForm(ponto);
 
-		String target = "Seu ponto de doação foi adicionado com sucesso. Juntos, podemos criar um mundo onde todos os animais recebam o amor e cuidado que merecem.";
-		$("main p").shouldHave(text(target));
+		String messageError = "Informe um email válido";
+		$(".alert-error").shouldHave(text(messageError));
 
 	}
 }
